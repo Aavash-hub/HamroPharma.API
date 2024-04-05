@@ -1,0 +1,6 @@
+@HamroPharma.API_HostAddress = http://localhost:5132
+
+GET {{HamroPharma.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
