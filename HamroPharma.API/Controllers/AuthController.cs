@@ -34,13 +34,13 @@ namespace HamroPharma.API.Controllers
                 {
                     var roles = await userManager.GetRolesAsync(identityUser);
                     //Create a Token and Response
-                    var jwtToken = tokenRepository.createJwtToken(identityUser, roles.ToList());
+                    var JwtToken = tokenRepository.createJwtToken(identityUser, roles.ToList());
 
                     var response = new LoginResponseDto()
                     {
                         Email = request.Email,
                         Roles = roles.ToList(),
-                        Token = "jwtToken"
+                        Token = JwtToken
 
                     };
                     return Ok(response);
