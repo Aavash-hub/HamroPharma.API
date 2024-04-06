@@ -1,4 +1,5 @@
 ﻿using HamroPharma.API.Models.DTO;
+using HamroPharma.API.Repositories.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,46 @@ namespace HamroPharma.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;
+        private readonly ITokenRepository tokenRepository;
 
-        public AuthController(UserManager<IdentityUser> userManager)
+        public AuthController(UserManager<IdentityUser> userManager,
+            ITokenRepository tokenRepository)
         {
             this.userManager = userManager;
+            this.tokenRepository = tokenRepository;
         }
+
+        //POST: {apibaseurl}/api/auth/login
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
+        {
+           var identityUser = await userManager.FindByEmailAsync(request.Email);
+            if (identityUser is not null)
+            {
+                var CheckpasswordResults = await userManager.CheckPasswordAsync(identityUser, request.password);
+
+                if (CheckpasswordResults)
+                {
+                    var roles = await userManager.GetRolesAsync(identityUser);
+                    //Create a Token and Response
+                    var jwtToken = tokenRepository.createJwtToken(identityUser, roles.ToList());
+
+                    var response = new LoginResponseDto()
+                    {
+                        Email = request.Email,
+                        Roles = roles.ToList(),
+                        Token = "jwtToken"
+
+                    };
+                    return Ok(response);
+                }
+            }
+            ModelState.AddModelError("","Email or Password is incorrect");
+
+            return ValidationProblem(ModelState);
+        }
+
 
         //POST: {apibaseurl}/api/auth/adduser
         [HttpPost]
@@ -25,10 +61,11 @@ namespace HamroPharma.API.Controllers
             var User = new IdentityUser
             {
                 UserName = request.Name?.Trim(),
-                Email = request.Email?.Trim()
+                Email = request.Email?.Trim(),
+                PhoneNumber = request.Number?.Trim()
             };
             //Create User
-            var identityResult = await userManager.CreateAsync(User, request.Password);
+            var identityResult = await userManager.CreateAsync(User, request.password);
             
             if(identityResult.Succeeded)
             {

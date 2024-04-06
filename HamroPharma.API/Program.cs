@@ -1,4 +1,6 @@
 using HamroPharma.API.Data;
+using HamroPharma.API.Repositories.Implementation;
+using HamroPharma.API.Repositories.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+
 builder.Services.AddDbContext<HPDbcontext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("HPconnection"));
@@ -24,6 +28,10 @@ builder.Services.AddDbContext<AuthDbcontext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("HPconnection"));
 });
+
+builder.Services.AddScoped<ITokenRepository,TokenRepository>();
+
+
 
 builder.Services.AddIdentityCore<IdentityUser>()
     .AddRoles<IdentityRole>()
