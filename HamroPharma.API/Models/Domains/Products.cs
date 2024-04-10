@@ -10,8 +10,6 @@
 
         public string? Productprice { get; set; }
 
-        public DateTime? addDate { get; set; }
-
         public DateTime? ExpiryDate { get; set; }
 
         public bool IsExpirable { get; set; } = false;
@@ -20,11 +18,8 @@
 
         public decimal MinQuantity { get; set; }
 
-        public decimal MaxQuantity { get; set; }
-
         public decimal openingStock { get; set; }
 
-        public decimal openingRate { get; set; }
 
     }
 }
