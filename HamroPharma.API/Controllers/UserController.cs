@@ -32,6 +32,32 @@ namespace HamroPharma.API.Controllers
             return Ok(users);
         }
 
+        // PUT: https://localhost:7144/api/User/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UserListDto updatedUserDto)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Update user properties
+            user.UserName = updatedUserDto.UserName;
+            user.Email = updatedUserDto.Email;
+            user.PhoneNumber = updatedUserDto.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, result.Errors);
+            }
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)

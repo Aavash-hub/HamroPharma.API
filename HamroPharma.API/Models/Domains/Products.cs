@@ -1,4 +1,6 @@
-﻿namespace HamroPharma.API.Models.Domains
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace HamroPharma.API.Models.Domains
 {
     public class Products
     {
@@ -6,20 +8,14 @@
 
         public string? name { get; set; }
 
-        public string? Description { get; set; }
+        public string Description { get; set; }
+        public int? Quantity { get; set; }
 
-        public string? Productprice { get; set; }
+        public string? Price { get; set; }
 
-        public DateTime? ExpiryDate { get; set; }
+        public  Guid VednorId {  get; set; }
 
-        public bool IsExpirable { get; set; } = false;
-
-        public DateTime? ModifiedDate { get; set; }
-
-        public decimal MinQuantity { get; set; }
-
-        public decimal openingStock { get; set; }
-
-
+        [ForeignKey("VendorId")]
+        public Vendor Vendor { get; set; }
     }
 }
