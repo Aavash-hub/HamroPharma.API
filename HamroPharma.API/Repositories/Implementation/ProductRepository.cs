@@ -13,9 +13,9 @@ namespace HamroPharma.API.Repositories.Implementation
             this.dbcontext = dbcontext;
         }
 
-        public async Task<Products> AddProduct(Products products, decimal vendorBalanceChange)
+        public async Task<Products> AddProduct(Products products)
         {
-            await dbcontext.Products.AddAsync(products);
+           await dbcontext.Products.AddAsync(products);
             await dbcontext.SaveChangesAsync();
 
             return products;
@@ -26,9 +26,15 @@ namespace HamroPharma.API.Repositories.Implementation
             throw new NotImplementedException();
         }
 
-        public Task<Products> GetProducts(Products products)
+        public async Task<IEnumerable<Products>> GetAllAysnc()
         {
-            throw new NotImplementedException();
+            return await dbcontext.Products.ToListAsync();
+        }
+
+        public async Task<Products?> GetProductById(Guid id)
+        {
+            var product = await dbcontext.Products.FirstOrDefaultAsync(p => p.Id == id);
+            return product;
         }
 
         public Task<Products> UpdateProducts(Products products)

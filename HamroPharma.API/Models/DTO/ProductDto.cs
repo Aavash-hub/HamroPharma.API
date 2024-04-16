@@ -1,20 +1,15 @@
-﻿namespace HamroPharma.API.Models.DTO
+﻿using System;
+
+namespace HamroPharma.API.Models.DTOs
 {
     public class ProductDto
     {
-        public Guid id { get; set; }
-
-        public string? name { get; set; }
-
+        public Guid Id { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
-        public string? Quantity { get; set; }
-
-        public string? Price { get; set; }
-
+        public int? Quantity { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public decimal Price { get; set; }
         public DateTime ExpiryDate { get; set; }
-
-        public bool IsExpirable { get; set; } = false;
-
-        public decimal openingStock { get; set; }
     }
 }

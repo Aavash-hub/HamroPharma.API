@@ -5,8 +5,9 @@ namespace HamroPharma.API.Repositories.Interface
     public interface IProductRepository
     {
         Task<Products> UpdateProducts(Products products);
-        Task<Products> GetProducts(Products products);
+        Task<IEnumerable<Products>> GetAllAysnc();
         Task <Products> DeleteProducts(Products products);
-        Task<Products> AddProduct(Products product, decimal vendorBalanceChange);
+        Task<Products> AddProduct(Products product);
+        Task<Products> GetProductById(Guid id);
     }
 }
