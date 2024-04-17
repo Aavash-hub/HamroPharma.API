@@ -6,6 +6,7 @@
         public int? Quantity { get; set; }
         public decimal Price { get; set; }
         public DateOnly purchasdate { get; set; }
+        public decimal Totalamount { get; set; }
         public Guid VendorId { get; set; }
         public Vendor Vendor { get; set; }
         public Guid ProductId { get; set; }

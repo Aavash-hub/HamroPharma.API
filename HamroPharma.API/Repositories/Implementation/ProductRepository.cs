@@ -21,9 +21,16 @@ namespace HamroPharma.API.Repositories.Implementation
             return products;
         }
 
-        public Task<Products> DeleteProducts(Products products)
+        public async Task<Products?> DeleteProducts(Products products)
         {
-            throw new NotImplementedException();
+            var existingProduct = await dbcontext.Products.FindAsync(products.Id);
+            if (existingProduct == null)
+            {
+                return null; // Product not found
+            }
+            dbcontext.Products.Remove(existingProduct);
+            await dbcontext.SaveChangesAsync();
+            return existingProduct;
         }
 
         public async Task<IEnumerable<Products>> GetAllAysnc()
@@ -37,9 +44,11 @@ namespace HamroPharma.API.Repositories.Implementation
             return product;
         }
 
-        public Task<Products> UpdateProducts(Products products)
+        public async Task<Products?> UpdateProduct(Products products)
         {
-            throw new NotImplementedException();
+            dbcontext.Entry(products).State = EntityState.Modified;
+            await dbcontext.SaveChangesAsync();
+            return products;
         }
     }
 }

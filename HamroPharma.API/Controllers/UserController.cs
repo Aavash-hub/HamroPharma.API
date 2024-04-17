@@ -11,6 +11,7 @@ namespace HamroPharma.API.Controllers
     {
         public readonly UserManager<IdentityUser> _userManager;
 
+
         public UserController(UserManager<IdentityUser> userManager)
         {
             _userManager = userManager;
