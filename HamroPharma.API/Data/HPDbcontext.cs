@@ -9,13 +9,14 @@ namespace HamroPharma.API.Data
         {
         }
         public DbSet<Products> Products { get; set; }
-/*        public DbSet<Vendor> Vendors { get; set; }
-        public DbSet<Purchase> Purchase { get; set; }*/
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Vendor> Vendors { get; set; }
+/*        public DbSet<Purchase> Purchase { get; set; }*/
         /*       public DbSet<OrderItem> OrderItems { get; set; }
                public DbSet<Transcation> Transcations { get; set;}*/
-        /*        public DbSet<Customer> Customers { get; set; }
-               public DbSet<Order> Orders { get; set; }*/
 
+        /* public DbSet<Order> Orders { get; set; }
+ */
 
     }
 }

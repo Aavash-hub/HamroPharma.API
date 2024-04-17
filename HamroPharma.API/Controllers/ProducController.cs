@@ -71,7 +71,6 @@ namespace HamroPharma.API.Controllers
 
         // GET: api/products/{id}
         [HttpGet("{id}")]
-        [Route("id:Guid")]
         public async Task<ActionResult<Products>> GetProduct(Guid id)
         {
             var product = await _productRepository.GetProductById(id);
@@ -88,11 +87,6 @@ namespace HamroPharma.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> EditProduct(Guid id, ProductDto productDto)
         {
-            if (id != productDto.Id)
-            {
-                return BadRequest("ID in the URL does not match the ID in the payload");
-            }
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -122,7 +116,6 @@ namespace HamroPharma.API.Controllers
                 return StatusCode(500, "Failed to update the product");
             }
         }
-
 
         // DELETE: api/products/
         [HttpDelete]
