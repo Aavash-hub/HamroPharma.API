@@ -4,6 +4,7 @@ using HamroPharma.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 {
     [DbContext(typeof(HPDbcontext))]
-    partial class HPDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20240418075246_Migrationsecond")]
+    partial class Migrationsecond
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

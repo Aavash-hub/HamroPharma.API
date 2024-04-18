@@ -63,7 +63,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-
+builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
+builder.Services.AddScoped<IcustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IVendorRespository, VendorRepository>();
 
 var app = builder.Build();
 

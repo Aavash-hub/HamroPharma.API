@@ -15,7 +15,7 @@ namespace HamroPharma.API.Controllers
     {
         private readonly IVendorRespository _vendorRepository;
 
-        public VendorController(VendorRepository vendorRepository)
+        public VendorController(IVendorRespository vendorRepository)
         {
             _vendorRepository = vendorRepository;
         }
