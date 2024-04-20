@@ -60,6 +60,7 @@ namespace HamroPharma.API.Controllers
                 // Create purchase object
                 var purchase = new Purchase
                 {
+                    Id = Guid.NewGuid(),
                     Quantity = purchaseDto.Quantity,
                     Price = purchaseDto.Price,
                     Purchasedate = purchaseDto.PurchaseDate,

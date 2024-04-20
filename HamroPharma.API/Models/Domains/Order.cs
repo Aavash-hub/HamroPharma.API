@@ -3,9 +3,9 @@
     public class Order
     {
         public Guid Id { get; set; }
+        public decimal totalamount { get; set; }
         public DateTime OrderDate { get; set; }
-        public Guid ProductsId { get; set; }
-        public Products products { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 
 }

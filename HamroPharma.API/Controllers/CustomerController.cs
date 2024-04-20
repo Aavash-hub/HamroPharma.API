@@ -51,7 +51,6 @@ namespace HamroPharma.API.Controllers
                     Id = Guid.NewGuid(),
                     Name = customerDto.Name,
                     Email = customerDto.Email,
-                    Phone = customerDto.Phone,
                     PhoneNumber = customerDto.PhoneNumber,
                     Address = customerDto.Address,
                     CustomerBalance = customerDto.CustomerBalance
@@ -100,7 +99,6 @@ namespace HamroPharma.API.Controllers
 
                 existingCustomer.Name = customerDto.Name;
                 existingCustomer.Email = customerDto.Email;
-                existingCustomer.Phone = customerDto.Phone;
                 existingCustomer.PhoneNumber = customerDto.PhoneNumber;
                 existingCustomer.Address = customerDto.Address;
                 existingCustomer.CustomerBalance = customerDto.CustomerBalance;
@@ -138,6 +136,39 @@ namespace HamroPharma.API.Controllers
             catch
             {
                 return StatusCode(500, "Failed to delete the customer"); // Deletion failed due to exception
+            }
+        }
+        [HttpPut("pay/{id}")]
+        public async Task<IActionResult> PayCustomerBalance(Guid id, decimal amount)
+        {
+            try
+            {
+                var customer = await _customerRepository.GetByIdAysnc(id);
+
+                if (customer == null)
+                {
+                    return NotFound("Customer not found");
+                }
+
+                if (amount <= 0)
+                {
+                    return BadRequest("Invalid payment amount");
+                }
+
+                if (customer.CustomerBalance < amount)
+                {
+                    return BadRequest("Insufficient customer balance");
+                }
+
+                // Deduct payment from customer balance
+                customer.CustomerBalance -= amount;
+                await _customerRepository.UpdateAysnc(customer);
+
+                return Ok("Payment successful");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Failed to process payment: {ex.Message}");
             }
         }
     }

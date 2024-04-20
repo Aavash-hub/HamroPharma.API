@@ -4,6 +4,7 @@ using HamroPharma.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 {
     [DbContext(typeof(HPDbcontext))]
-    partial class HPDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20240420120320_migrationoftables")]
+    partial class migrationoftables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,54 +53,6 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("HamroPharma.API.Models.Domains.Order", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("totalamount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("HamroPharma.API.Models.Domains.OrderDetail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("productsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("productsId");
-
-                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("HamroPharma.API.Models.Domains.Products", b =>
@@ -162,36 +117,6 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
                     b.ToTable("Purchases");
                 });
 
-            modelBuilder.Entity("HamroPharma.API.Models.Domains.Transcation", b =>
-                {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CustomerID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("discount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("CustomerID");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("Transcations");
-                });
-
             modelBuilder.Entity("HamroPharma.API.Models.Domains.Vendor", b =>
                 {
                     b.Property<Guid>("Id")
@@ -222,21 +147,6 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
                     b.ToTable("Vendors");
                 });
 
-            modelBuilder.Entity("HamroPharma.API.Models.Domains.OrderDetail", b =>
-                {
-                    b.HasOne("HamroPharma.API.Models.Domains.Order", null)
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId");
-
-                    b.HasOne("HamroPharma.API.Models.Domains.Products", "Products")
-                        .WithMany()
-                        .HasForeignKey("productsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("HamroPharma.API.Models.Domains.Purchase", b =>
                 {
                     b.HasOne("HamroPharma.API.Models.Domains.Products", "products")
@@ -254,30 +164,6 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
                     b.Navigation("Vendor");
 
                     b.Navigation("products");
-                });
-
-            modelBuilder.Entity("HamroPharma.API.Models.Domains.Transcation", b =>
-                {
-                    b.HasOne("HamroPharma.API.Models.Domains.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HamroPharma.API.Models.Domains.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("HamroPharma.API.Models.Domains.Order", b =>
-                {
-                    b.Navigation("OrderDetails");
                 });
 #pragma warning restore 612, 618
         }

@@ -21,9 +21,9 @@ namespace HamroPharma.API.Repositories.Implementation
             return products;
         }
 
-        public async Task<Products?> DeleteProducts(Products products)
+        public async Task<Products?> DeleteProducts(Guid id)
         {
-            var existingProduct = await dbcontext.Products.FindAsync(products.Id);
+            var existingProduct = await dbcontext.Products.FindAsync(id);
             if (existingProduct == null)
             {
                 return null; // Product not found

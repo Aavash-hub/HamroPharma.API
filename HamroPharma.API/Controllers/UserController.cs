@@ -79,5 +79,24 @@ namespace HamroPharma.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, result.Errors);
             }
         }
+        // GET: api/User/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById(string id)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

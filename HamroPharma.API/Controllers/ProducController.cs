@@ -118,12 +118,12 @@ namespace HamroPharma.API.Controllers
         }
 
         // DELETE: api/products/
-        [HttpDelete]
-        public async Task<IActionResult> DeleteProducts(Products products)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(Guid id)
         {
             try
             {
-                var deletedProduct = await _productRepository.DeleteProducts(products);
+                var deletedProduct = await _productRepository.DeleteProducts(id);
 
                 if (deletedProduct != null)
                 {
@@ -139,6 +139,7 @@ namespace HamroPharma.API.Controllers
                 return StatusCode(500, "Failed to delete the product"); // Deletion failed due to exception
             }
         }
+
 
     }
 }

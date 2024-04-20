@@ -46,10 +46,10 @@ namespace HamroPharma.API.Controllers
             {
                 var vendor = new Vendor
                 {
-                    Id = vendorDto.Id,
+                    Id = Guid.NewGuid(),
                     Name = vendorDto.Name,
                     Address = vendorDto.Address,
-                    City = vendorDto.City,
+                    Number = vendorDto.Number,
                     companyName = vendorDto.CompanyName,
                     Balance = vendorDto.Balance
                 };
@@ -96,7 +96,7 @@ namespace HamroPharma.API.Controllers
 
                 existingVendor.Name = vendorDto.Name;
                 existingVendor.Address = vendorDto.Address;
-                existingVendor.City = vendorDto.City;
+                existingVendor.Number = vendorDto.Number;
                 existingVendor.companyName = vendorDto.CompanyName;
                 existingVendor.Balance = vendorDto.Balance;
 
@@ -132,6 +132,34 @@ namespace HamroPharma.API.Controllers
             catch
             {
                 return StatusCode(500, "Failed to delete the vendor"); // Deletion failed due to exception
+            }
+        }
+        [HttpPut("pay/{id}")]
+        public async Task<IActionResult> PayVendorBalance(Guid id, decimal amount)
+        {
+            try
+            {
+                var vendor = await _vendorRepository.GetByIdAysnc(id);
+
+                if (vendor == null)
+                {
+                    return NotFound("Vendor not found");
+                }
+
+                if (amount <= 0)
+                {
+                    return BadRequest("Invalid payment amount");
+                }
+
+                // Deduct payment from vendor balance
+                vendor.Balance -= amount;
+                await _vendorRepository.UpdateAysnc(vendor);
+
+                return Ok("Payment successful");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Failed to process payment: {ex.Message}");
             }
         }
     }

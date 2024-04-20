@@ -6,11 +6,19 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 {
     /// <inheritdoc />
-    public partial class Migrationsecond : Migration
+    public partial class migrationoftables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterColumn<string>(
+                name: "Description",
+                table: "Products",
+                type: "nvarchar(max)",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)");
+
             migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
@@ -18,7 +26,6 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CustomerBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
@@ -35,7 +42,7 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     companyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: true)
                 },
@@ -95,6 +102,16 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 
             migrationBuilder.DropTable(
                 name: "Vendors");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Description",
+                table: "Products",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)",
+                oldNullable: true);
         }
     }
 }
