@@ -23,26 +23,24 @@ namespace HamroPharma.API.Controllers
             _orderRepository = orderRepository;
             _prodcutRespository = productRepository;
         }
+
         // POST: api/orders
         [HttpPost]
-        public async Task<ActionResult<Order>> CreateOrder(List<OrderDetailDTO> orderDetails)
+        public async Task<ActionResult<Order>> CreateOrder(List<OrderDetailDTO> orderItems)
         {
             try
             {
-                // Calculate total amount for the order
                 decimal totalAmount = 0;
-                foreach (var orderDetail in orderDetails)
-                {
-                    var product = await _prodcutRespository.GetProductById(orderDetail.ProductId);
-                    if (product != null)
-                    {
-                        totalAmount += (orderDetail.Price * orderDetail.Quantity);
 
-                        // Deduct the selected product quantity from inventory
-                        product.Quantity -= orderDetail.Quantity;
-                        // Save the changes to the product quantity
-                        await _prodcutRespository.UpdateProduct(product);
+                foreach (var orderItem in orderItems)
+                {
+                    var product = await _prodcutRespository.GetProductById(orderItem.OrderproductsId);
+                    if (product == null)
+                    {
+                        return BadRequest($"Product with ID {orderItem.OrderproductsId} does not exist.");
                     }
+                    totalAmount += product.Price * orderItem.quantity;
+
                 }
 
                 // Create a new order
@@ -50,39 +48,34 @@ namespace HamroPharma.API.Controllers
                 {
                     Id = Guid.NewGuid(),
                     totalamount = totalAmount,
-                    OrderDate = DateTime.Now,
-                    OrderDetails = ConvertToOrderDetails(orderDetails)
+                    OrderDate = DateTime.Now
                 };
 
                 // Save the order
                 var newOrder = await _orderRepository.AddOrderAsync(order);
+
+                // Save order items
+                foreach (var orderItem in orderItems)
+                {
+                    var product = await _prodcutRespository.GetProductById(orderItem.OrderproductsId);
+                    var orderDetail = new OrderDetail
+                    {
+                        Id = Guid.NewGuid(),
+                        OrderId = newOrder.Id,
+                        OrderproductsId = orderItem.OrderproductsId,
+                        ProductName = orderItem.ProductName,
+                        quantity = orderItem.quantity,
+                        price = product.Price
+                    };
+                    await _orderRepository.AddOrderDetailAsync(orderDetail);
+                }
+
                 return CreatedAtAction(nameof(GetOrder), new { id = newOrder.Id }, newOrder);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error creating order: {ex.Message}");
+                return StatusCode(504, $"Error creating order: {ex.Message}");
             }
-        }
-
-        private List<OrderDetail> ConvertToOrderDetails(List<OrderDetailDTO> orderDetailDTOs)
-        {
-            var orderDetails = new List<OrderDetail>();
-            foreach (var dto in orderDetailDTOs)
-            {
-                orderDetails.Add(new OrderDetail
-                {
-                    Id = Guid.NewGuid(),
-                    productsId = dto.ProductId,
-                    quantity = dto.Quantity,
-                    Products = new Products
-                    {
-                        Id = dto.ProductId,
-                        Name = dto.ProductName,
-                        Price = dto.Price
-                    }
-                });
-            }
-            return orderDetails;
         }
 
         // GET: api/orders/{id}

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 {
     [DbContext(typeof(HPDbcontext))]
-    [Migration("20240420160354_LastMigrationoftables")]
+    [Migration("20240420220416_LastMigrationoftables")]
     partial class LastMigrationoftables
     {
         /// <inheritdoc />
@@ -81,15 +81,15 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
                     b.Property<Guid?>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("OrderproductsId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("price")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("productsId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("quantity")
                         .HasColumnType("int");
@@ -98,7 +98,7 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("productsId");
+                    b.HasIndex("OrderproductsId");
 
                     b.ToTable("OrderItems");
                 });
@@ -174,14 +174,14 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
                     b.Property<Guid>("CustomerID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("TranscationOrderId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("discount")
                         .HasColumnType("decimal(18,2)");
@@ -190,7 +190,7 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 
                     b.HasIndex("CustomerID");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("TranscationOrderId");
 
                     b.ToTable("Transcations");
                 });
@@ -233,9 +233,7 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 
                     b.HasOne("HamroPharma.API.Models.Domains.Products", "Products")
                         .WithMany()
-                        .HasForeignKey("productsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderproductsId");
 
                     b.Navigation("Products");
                 });
@@ -269,9 +267,7 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 
                     b.HasOne("HamroPharma.API.Models.Domains.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TranscationOrderId");
 
                     b.Navigation("Customer");
 

@@ -1,5 +1,6 @@
 ﻿using HamroPharma.API.Models.Domains;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace HamroPharma.API.Data
 {

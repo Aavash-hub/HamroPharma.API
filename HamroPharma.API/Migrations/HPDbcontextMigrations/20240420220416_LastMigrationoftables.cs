@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 {
     /// <inheritdoc />
-    public partial class migrationoftables : Migration
+    public partial class LastMigrationoftables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,6 +36,19 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    totalamount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Vendors",
                 columns: table => new
                 {
@@ -49,6 +62,59 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Vendors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrderproductsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    quantity = table.Column<int>(type: "int", nullable: true),
+                    price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderItems_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_OrderItems_Products_OrderproductsId",
+                        column: x => x.OrderproductsId,
+                        principalTable: "Products",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Transcations",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    discount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CustomerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TranscationOrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transcations", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Transcations_Customers_CustomerID",
+                        column: x => x.CustomerID,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Transcations_Orders_TranscationOrderId",
+                        column: x => x.TranscationOrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -81,6 +147,16 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderId",
+                table: "OrderItems",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderproductsId",
+                table: "OrderItems",
+                column: "OrderproductsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Purchases_ProductsId",
                 table: "Purchases",
                 column: "ProductsId");
@@ -89,19 +165,38 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
                 name: "IX_Purchases_VendorId",
                 table: "Purchases",
                 column: "VendorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transcations_CustomerID",
+                table: "Transcations",
+                column: "CustomerID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transcations_TranscationOrderId",
+                table: "Transcations",
+                column: "TranscationOrderId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "OrderItems");
 
             migrationBuilder.DropTable(
                 name: "Purchases");
 
             migrationBuilder.DropTable(
+                name: "Transcations");
+
+            migrationBuilder.DropTable(
                 name: "Vendors");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Description",

@@ -16,9 +16,23 @@ namespace HamroPharma.API.Repositories.Implementation
 
         public async Task<Order> AddOrderAsync(Order order)
         {
-            _context.Orders.Add(order);
+            try
+            {
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+                return order;
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions appropriately
+                throw new Exception($"Error adding order: {ex.Message}. Inner exception: {ex.InnerException?.Message}");
+            }
+        }
+
+        public async Task AddOrderDetailAsync(OrderDetail orderDetail)
+        {
+            _context.OrderItems.Add(orderDetail);
             await _context.SaveChangesAsync();
-            return order;
         }
 
         public async Task<List<Order>> GetAllOrdersAsync()

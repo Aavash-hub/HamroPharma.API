@@ -7,6 +7,7 @@ namespace HamroPharma.API.Repositories.Interface
         Task<Order> GetOrderByIdAsync(Guid id);
         Task<List<Order>> GetAllOrdersAsync();
         Task<Order> AddOrderAsync(Order order);
+        Task AddOrderDetailAsync(OrderDetail orderDetail);
 
     }
 }

@@ -6,5 +6,6 @@ namespace HamroPharma.API.Repositories.Interface
     {
         Task<Transcation> AddTransactionAsync(Transcation transaction);
         Task<Transcation> GetTransactionByIdAsync(Guid id);
+        Task<List<Transcation>> GetAllTransactions();
     }
 }

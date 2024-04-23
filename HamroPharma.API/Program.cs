@@ -66,6 +66,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
 builder.Services.AddScoped<IcustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IVendorRespository, VendorRepository>();
+builder.Services.AddScoped<IOrderRespository, OrderRespository>();
+builder.Services.AddScoped<ITranscationRepository,TranscationRespository>();
 
 var app = builder.Build();
 

@@ -1,4 +1,6 @@
-﻿namespace HamroPharma.API.Models.Domains
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace HamroPharma.API.Models.Domains
 {
     public class Transcation
     {
@@ -8,7 +10,12 @@
         public decimal TotalAmount { get; set; }
         public Guid CustomerID { get; set; }
         public Customer Customer { get; set; }
-        public Guid OrderId { get; set; }
+
+        [ForeignKey("Order")]
+        public Guid? TranscationOrderId { get; set; }
         public Order Order { get; set; }
+        public string Productname {get; set;}
+        public int quantity { get; set;}
+
     }
 }

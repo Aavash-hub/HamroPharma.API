@@ -40,12 +40,16 @@ namespace HamroPharma.API.Repositories.Implementation
 
         public async Task<Products?> GetProductById(Guid id)
         {
-            var product = await dbcontext.Products.FirstOrDefaultAsync(p => p.Id == id);
-            return product;
+            return await dbcontext.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);;
         }
 
         public async Task<Products?> UpdateProduct(Products products)
         {
+            var existingProduct = await dbcontext.Products.FindAsync(products.Id);
+            if (existingProduct != null)
+            {
+                dbcontext.Entry(existingProduct).State = EntityState.Detached; // Detach existing entity
+            }
             dbcontext.Entry(products).State = EntityState.Modified;
             await dbcontext.SaveChangesAsync();
             return products;
