@@ -19,7 +19,6 @@ namespace HamroPharma.API.Repositories.Implementation
             await _context.SaveChangesAsync();
             return transaction;
         }
-
         public async Task<List<Transcation>> GetAllTransactions()
         {
             return await _context.Transcations
@@ -28,8 +27,6 @@ namespace HamroPharma.API.Repositories.Implementation
             .ThenInclude(od => od.Products) // This is correct if Products is a related entity of OrderDetail
                 .ToListAsync();
         }
-
-
         public async Task<Transcation> GetTransactionByIdAsync(Guid id)
         {
             return await _context.Transcations.FirstOrDefaultAsync(t => t.ID == id);

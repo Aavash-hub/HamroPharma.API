@@ -24,6 +24,7 @@ namespace HamroPharma.API.Controllers
             var users = await _userManager.Users
                 .Select(u => new UserListDto
                 {
+                    id = u.Id,
                     UserName = u.UserName,
                     Email = u.Email,
                     PhoneNumber = u.PhoneNumber

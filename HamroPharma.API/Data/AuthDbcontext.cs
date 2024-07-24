@@ -13,7 +13,7 @@ namespace HamroPharma.API.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            var ReaderRoleId = "56d409c1-954a-46cf-9eb8-aaf070832bb3]";
+            var ReaderRoleId = "[56d409c1-954a-46cf-9eb8-aaf070832bb3]";
             var WriterRoleId = "[32d7a896-ed71-4cad-aa2a-91af6ba2f0ab]";
             //Create Admin and Staff Roles
             var roles = new List<IdentityRole>

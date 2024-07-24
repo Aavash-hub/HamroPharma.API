@@ -93,8 +93,6 @@ namespace HamroPharma.API.Controllers
                     TransactionDate = t.TransactionDate // Assuming this is correct.
                 })).ToList();
 
-
-
                 return Ok(salesReport);
             }
             catch (Exception ex)

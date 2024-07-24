@@ -18,12 +18,10 @@ namespace HamroPharma.API.Repositories.Implementation
         {
             return await _dbContext.Purchases.ToListAsync();
         }
-
         public async Task<Purchase> GetByIdAsync(Guid id)
         {
             return await _dbContext.Purchases.FindAsync(id);
         }
-
         public async Task<IEnumerable<PurchaseReportDto>> GetPurchaseReportAsync()
         {
             var purchaseReport = await(from purchase in _dbContext.Purchases
@@ -40,7 +38,6 @@ namespace HamroPharma.API.Repositories.Implementation
 
             return purchaseReport;
         }
-
         public async Task<Purchase> MakePurchaseAsync(Purchase purchase)
         {
             _dbContext.Purchases.Add(purchase);

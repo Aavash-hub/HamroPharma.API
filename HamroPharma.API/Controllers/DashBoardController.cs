@@ -30,7 +30,7 @@ namespace HamroPharma.API.Controllers
         [HttpGet("total-purchases")]
         public async Task<ActionResult<decimal>> GetTotalPurchases()
         {
-            decimal totalPurchases = await _context.Purchases
+           decimal totalPurchases = await _context.Purchases
                 .SumAsync(p => p.Totalamount);
             return Ok(totalPurchases);
         }
