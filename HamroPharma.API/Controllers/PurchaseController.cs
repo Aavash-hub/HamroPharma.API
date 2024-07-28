@@ -23,8 +23,6 @@ namespace HamroPharma.API.Controllers
             _vendorRepository = vendorRepository;
         }
 
-        // Existing actions
-
         [HttpPost]
         public async Task<ActionResult<Purchase>> MakePurchase(PurchaseDto purchaseDto)
         {
@@ -57,18 +55,20 @@ namespace HamroPharma.API.Controllers
                 // Update product quantity
                 product.Quantity += purchaseDto.Quantity;
 
-                // Create purchase object
+                // Create purchase object with current date as purchase date
                 var purchase = new Purchase
                 {
                     Id = Guid.NewGuid(),
                     Quantity = purchaseDto.Quantity,
                     Price = purchaseDto.Price,
-                    Purchasedate = purchaseDto.PurchaseDate,
+                    purchasedate = DateOnly.FromDateTime(DateTime.UtcNow), 
                     Totalamount = totalAmount,
                     VendorId = purchaseDto.VendorId,
                     ProductsId = purchaseDto.ProductId
                 };
 
+                await _productRepository.UpdateProduct(product);
+                await _vendorRepository.UpdateAysnc(vendor);
                 // Save changes to database
                 await _purchaseRepository.MakePurchaseAsync(purchase);
 
@@ -79,6 +79,7 @@ namespace HamroPharma.API.Controllers
                 return StatusCode(500, $"Failed to make the purchase: {ex.Message}");
             }
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Purchase>> GetPurchase(Guid id)

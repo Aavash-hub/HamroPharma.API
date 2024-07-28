@@ -22,9 +22,10 @@ namespace HamroPharma.API.Repositories.Implementation
         public async Task<List<Transcation>> GetAllTransactions()
         {
             return await _context.Transcations
+            .Include(t => t.Customer)
             .Include(t => t.Order)
              .ThenInclude(o => o.OrderDetails)
-            .ThenInclude(od => od.Products) // This is correct if Products is a related entity of OrderDetail
+            .ThenInclude(od => od.Products)// This is correct if Products is a related entity of OrderDetail
                 .ToListAsync();
         }
         public async Task<Transcation> GetTransactionByIdAsync(Guid id)

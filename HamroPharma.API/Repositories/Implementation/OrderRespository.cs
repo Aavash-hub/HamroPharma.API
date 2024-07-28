@@ -45,9 +45,8 @@ namespace HamroPharma.API.Repositories.Implementation
         public async Task<Order> GetOrderByIdAsync(Guid id)
         {
             return await _context.Orders
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Products)
-                .SingleOrDefaultAsync(o => o.Id == id);
+                .Include(o => o.OrderDetails) 
+                .FirstOrDefaultAsync(o => o.Id == id);
         }
     }
 }

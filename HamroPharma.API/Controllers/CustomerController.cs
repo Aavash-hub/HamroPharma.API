@@ -138,8 +138,9 @@ namespace HamroPharma.API.Controllers
                 return StatusCode(500, "Failed to delete the customer"); // Deletion failed due to exception
             }
         }
+
         [HttpPut("pay/{id}")]
-        public async Task<IActionResult> PayCustomerBalance(Guid id, decimal amount)
+        public async Task<IActionResult> PayCustomerBalance(Guid id, [FromBody] PaymentRequest request)
         {
             try
             {
@@ -150,18 +151,18 @@ namespace HamroPharma.API.Controllers
                     return NotFound("Customer not found");
                 }
 
-                if (amount <= 0)
+                if (request.Amount <= 0)
                 {
                     return BadRequest("Invalid payment amount");
                 }
 
-                if (customer.CustomerBalance < amount)
+                if (customer.CustomerBalance < request.Amount)
                 {
                     return BadRequest("Insufficient customer balance");
                 }
 
                 // Deduct payment from customer balance
-                customer.CustomerBalance -= amount;
+                customer.CustomerBalance -= request.Amount;
                 await _customerRepository.UpdateAysnc(customer);
 
                 return Ok("Payment successful");

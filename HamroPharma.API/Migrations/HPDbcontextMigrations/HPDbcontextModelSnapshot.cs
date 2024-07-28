@@ -49,7 +49,7 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("HamroPharma.API.Models.Domains.Order", b =>
@@ -66,7 +66,7 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("HamroPharma.API.Models.Domains.OrderDetail", b =>
@@ -97,7 +97,7 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 
                     b.HasIndex("OrderproductsId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("HamroPharma.API.Models.Domains.Products", b =>
@@ -126,7 +126,7 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("HamroPharma.API.Models.Domains.Purchase", b =>
@@ -159,7 +159,7 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 
                     b.HasIndex("VendorId");
 
-                    b.ToTable("Purchases");
+                    b.ToTable("Purchases", (string)null);
                 });
 
             modelBuilder.Entity("HamroPharma.API.Models.Domains.Transcation", b =>
@@ -189,7 +189,7 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 
                     b.HasIndex("TranscationOrderId");
 
-                    b.ToTable("Transcations");
+                    b.ToTable("Transcations", (string)null);
                 });
 
             modelBuilder.Entity("HamroPharma.API.Models.Domains.Vendor", b =>
@@ -219,7 +219,7 @@ namespace HamroPharma.API.Migrations.HPDbcontextMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Vendors");
+                    b.ToTable("Vendors", (string)null);
                 });
 
             modelBuilder.Entity("HamroPharma.API.Models.Domains.OrderDetail", b =>

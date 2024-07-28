@@ -4,6 +4,7 @@ using HamroPharma.API.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
 using HamroPharma.API.Repositories.Implementation;
 using HamroPharma.API.Models.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace HamroPharma.API.Controllers
 {
@@ -23,28 +24,38 @@ namespace HamroPharma.API.Controllers
             _customerRepository = customerRepository;
         }
 
-        // POST: api/transactions
-        [HttpPost("add")]
-        public async Task<ActionResult<Transcation>> AddTransaction(TransactionDto transactionDto)
+        [HttpPost("{orderId}")]
+        public async Task<ActionResult<Transcation>> AddTransaction(Guid orderId, TransactionDto transactionDto)
         {
-            decimal discountAmount = 0;
             try
             {
-                var order = await _orderRepository.GetOrderByIdAsync(transactionDto.TranscationOrderId);
+                var order = await _orderRepository.GetOrderByIdAsync(orderId);
+                if (order == null)
+                {
+                    return NotFound($"Order with ID {orderId} not found.");
+                }
+
                 var customer = await _customerRepository.GetByIdAysnc(transactionDto.CustomerId);
-                discountAmount = transactionDto.Discount;
-                decimal discountedTotalAmount = transactionDto.TotalAmount - discountAmount;
-                order.totalamount -= discountedTotalAmount;
-                customer.CustomerBalance += discountedTotalAmount;
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID {transactionDto.CustomerId} not found.");
+                }
+
+                decimal totalBeforeDiscount = order.totalamount; // Assuming this is the pre-discount total
+                decimal finalAmount = totalBeforeDiscount - transactionDto.Discount;
+
+                // These lines assume you're tracking paid amounts or adjustments to the original total
+                order.totalamount -= finalAmount; // Be careful with this line, as it might not be doing what you expect
+                customer.CustomerBalance += finalAmount;
 
                 var transaction = new Transcation
                 {
                     ID = Guid.NewGuid(),
-                    discount = discountAmount,
-                    TransactionDate = DateTime.Now,
-                    TotalAmount = transactionDto.TotalAmount,
+                    discount = transactionDto.Discount,
+                    TransactionDate = transactionDto.PurchaseDate,
+                    TotalAmount = finalAmount,
                     CustomerID = transactionDto.CustomerId,
-                    TranscationOrderId = transactionDto.TranscationOrderId
+                    TranscationOrderId = orderId
                 };
 
                 var newTransaction = await _transactionRepository.AddTransactionAsync(transaction);
@@ -54,9 +65,10 @@ namespace HamroPharma.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error adding transaction: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
 
         // GET: api/transactions/{id}
         [HttpGet("{id}")]
@@ -84,13 +96,17 @@ namespace HamroPharma.API.Controllers
             {
                 var transactions = await _transactionRepository.GetAllTransactions();
 
+                // Debugging: Check if customers are loaded
+                var debugCustomers = transactions.Select(t => t.Customer?.Name ?? "No Customer Loaded").ToList();
+                Console.WriteLine(string.Join(", ", debugCustomers));
+
                 var salesReport = transactions.SelectMany(t => t.Order.OrderDetails.Select(od => new SalesReportDto
                 {
-                    ProductName = od.ProductName ?? "Unknown", // The property name used here must match your class definition.
-                    quantity = od.quantity ?? 0, // The property name used here must match your class definition.
-                    TotalAmount = t.TotalAmount, // Assuming this is correct.
-                    CustomerName = t.Customer?.Name ?? "Unknown", // Assuming this is correct.
-                    TransactionDate = t.TransactionDate // Assuming this is correct.
+                    ProductName = od.ProductName ?? "Unknown",
+                    quantity = od.quantity ?? 0,
+                    TotalAmount = t.TotalAmount,
+                    CustomerName = t.Customer?.Name ?? "Unknown",
+                    TransactionDate = t.TransactionDate
                 })).ToList();
 
                 return Ok(salesReport);
@@ -100,5 +116,6 @@ namespace HamroPharma.API.Controllers
                 return StatusCode(500, $"Error generating sales report: {ex.Message}");
             }
         }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using HamroPharma.API.Models.Domains;
+using HamroPharma.API.Models.DTO;
 using HamroPharma.API.Models.DTOs;
 using HamroPharma.API.Repositories.Implementation;
 using HamroPharma.API.Repositories.Interface;
@@ -135,7 +136,7 @@ namespace HamroPharma.API.Controllers
             }
         }
         [HttpPut("pay/{id}")]
-        public async Task<IActionResult> PayVendorBalance(Guid id, decimal amount)
+        public async Task<IActionResult> PayVendorBalance(Guid id, [FromBody] PaymentRequest request)
         {
             try
             {
@@ -143,23 +144,23 @@ namespace HamroPharma.API.Controllers
 
                 if (vendor == null)
                 {
-                    return NotFound("Vendor not found");
+                    return NotFound(new { message = "Vendor not found" });
                 }
 
-                if (amount <= 0)
+                if (request.Amount <= 0)
                 {
-                    return BadRequest("Invalid payment amount");
+                    return BadRequest(new { message = "Invalid payment amount" });
                 }
 
                 // Deduct payment from vendor balance
-                vendor.Balance -= amount;
+                vendor.Balance -= request.Amount;
                 await _vendorRepository.UpdateAysnc(vendor);
 
-                return Ok("Payment successful");
+                return Ok(new { message = "Payment successful" });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Failed to process payment: {ex.Message}");
+                return StatusCode(500, new { message = $"Failed to process payment: {ex.Message}" });
             }
         }
     }

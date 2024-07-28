@@ -17,7 +17,6 @@ namespace HamroPharma.API.Data
         public DbSet<Transcation> Transcations { get; set; }
 
         public DbSet<Order> Orders { get; set; }
-
-
+        public object Transactions { get; internal set; }
     }
 }

@@ -14,6 +14,6 @@ namespace HamroPharma.API.Models.Domains
         public decimal price { get; set; }
         public Products Products { get; set; }
         public Guid OrderId { get; set; }
-
+        public OrderDetail() { }
     }
 }

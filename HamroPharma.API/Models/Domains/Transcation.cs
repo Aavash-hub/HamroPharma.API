@@ -14,8 +14,6 @@ namespace HamroPharma.API.Models.Domains
         [ForeignKey("Order")]
         public Guid? TranscationOrderId { get; set; }
         public Order Order { get; set; }
-        public string Productname {get; set;}
-        public int quantity { get; set;}
 
     }
 }

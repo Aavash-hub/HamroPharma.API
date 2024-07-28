@@ -30,8 +30,8 @@ namespace HamroPharma.API.Controllers
         [HttpGet("total-purchases")]
         public async Task<ActionResult<decimal>> GetTotalPurchases()
         {
-           decimal totalPurchases = await _context.Purchases
-                .SumAsync(p => p.Totalamount);
+            decimal totalPurchases = await _context.Purchases
+                 .SumAsync(p => p.Totalamount);
             return Ok(totalPurchases);
         }
 
@@ -60,6 +60,41 @@ namespace HamroPharma.API.Controllers
                     ExpiryDate = p.ExpiryDate
                 }).ToListAsync();
             return Ok(expiredDrugs);
+        }
+
+
+        [HttpGet("salesgrowth")]
+        public async Task<IActionResult> GetSalesGrowth()
+        {
+            try
+            {
+                var transactions = await _context.Transcations
+                    .OrderBy(t => t.TransactionDate)
+                    .ToListAsync();
+
+                var salesData = transactions
+                    .GroupBy(t => t.TransactionDate.Date)
+                    .Select(g => new SalesDataDto
+                    {
+                        Date = g.Key,
+                        TotalSales = g.Sum(x => x.TotalAmount),
+                        Growth = 0M  // Initialize with zero, will be calculated in the next step
+                    })
+                    .ToList();
+
+                // Calculate growth
+                for (int i = 1; i < salesData.Count; i++)
+                {
+                    salesData[i].Growth = salesData[i].TotalSales - salesData[i - 1].TotalSales;
+                }
+
+                return Ok(salesData);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details here if necessary
+                return StatusCode(500, "Internal Server Error: " + ex.Message);
+            }
         }
     }
 }
